@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+    <title>주우진</title>
+    <script>
+        var weatherimg;
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        var backimage = new Array();
+        backimage[0] = "https://lh3.googleusercontent.com/proxy/RdW3DeDg0EYeoD3-giFYxmF-TtrVQVf28RP9KxgIdTjlEJSU-EWfFp5AwdiW0xkGGvOzkAlioI9eYSVbK3NUt-wk6sAcECOAqCPwe5U3-wWb_UgRsQKGze71utklPXBlNNINikDmokuZSTIDflfhjMc4xg6h";
+        backimage[1] = "http://siloam1004.com/upfile/product1/pr8/15874393981.jpg";
+        backimage[2] = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/d7/5b/d75bf02e2a35f76dba6ed5eeccde793c45d74edd83df838e31290603ceb5c5c9_v1.jpg";
+        backimage[3] = "https://cdn.pixabay.com/photo/2016/10/20/18/35/earth-1756274__340.jpg";
+        backimage[4] = "https://gongu.copyright.or.kr/gongu/wrt/cmmn/wrtFileDownload.do?wrtSn=13023133&fileSn=1&wrtFileTy=02";
+        window.onload = function() {
+            var rand = Math.round(Math.random() * 4);
+            //반복제거, url
+            document.getElementById("backimage").style.backgroundRepeat = "no-repeat";
+            //이미지 등록
+            document.getElementById("backimage").style.backgroundImage = "url('" + backimage[rand] + "')";
+            //이미지 사이즈
+            document.getElementById("backimage").style.backgroundSize = "cover";
+            remake();
+        }
+
+
+        function success(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var coordsObj = {
+                latitude,
+                longitude
+            };
+            console.log(latitude);
+            console.log(longitude);
+            getWeather(latitude, longitude);
+        };
+
+        function error(err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+        };
+
+        function getWeather(lat, lon) {
+            fetch(
+                    'https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lon + '&appid=82d97bd45f5d2016785ea4de85048c25&units=metric'
+                )
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(json) {
+                    console.log(json);
+                    var temparature = json.main.temp; //온도
+                    var place = json.name; // 사용자 위치
+                    var weather = json.weather; // 날씨
+                    document.getElementById('temparature').innerText = temparature + "℃";
+                    document.getElementById('place').innerText = place;
+                    document.getElementById('weather').innerText = weather[0]["main"];
+                    weatherimg = "https://openweathermap.org/img/w/" + weather[0]["icon"] + ".png";
+                    document.getElementById('weathericon').src = weatherimg;
+                    namecheck();
+
+                });
+        }
+
+        function imageSrc(weatherimg) {
+
+            $("#imgurl").attr("src", weatherimg);
+
+        }
+        navigator.geolocation.getCurrentPosition(success, error, options);
+
+        function namecheck() {
+            if (localStorage.length != 0) {
+
+                var date = new Date();
+                var Hours = date.getHours();
+                if (Hours >= 06 && Hours < 12) {
+                    document.getElementById('name').value = "Good Morning ," + localStorage.getItem('name');
+                } else if (Hours >= 12 && Hours < 18) {
+                    document.getElementById('name').value = "Good Afternoon ," + localStorage.getItem('name');
+                } else if (Hours >= 18 && Hours < 24) {
+                    document.getElementById('name').value = "Good Evening ," + localStorage.getItem('name');
+                } else {
+                    document.getElementById('name').value = "Good Night ," + localStorage.getItem('name');
+                }
+            }
+        }
+        var Clock = setInterval(function() {
+            var date = new Date();
+            var Hours = addZero(date.getHours());
+            var Minutes = addZero(date.getMinutes());
+            var Seconds = addZero(date.getSeconds());
+            document.getElementById('clock').innerText = Hours + ":" + Minutes + ":" + Seconds;
+        }, 1000);
+
+        function addZero(time) {
+            return (time < 10 ? '0' + time : '' + time)
+        }
+
+        function removeAllChildNodes(parent) {
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        }
+        //what is your name
+        function Enter() {
+            if (event.keyCode == 13) {
+                var name = document.getElementById('name').value;
+                localStorage.setItem('name', name);
+                namecheck();
+            }
+        }
+        //wirte a to do
+        function Enter2() {
+            if (event.keyCode == 13 && document.getElementById('write').value != '') {
+                var todolist = document.getElementById("todo");
+                removeAllChildNodes(todolist);
+                var a = new Array();
+                console.log(localStorage.getItem('todo'));
+                if (localStorage.getItem('todo') != null) {
+                    var output = localStorage.getItem('todo');
+                    a = JSON.parse(output);
+                }
+                var txt = document.getElementById('write').value;
+                document.getElementById('write').value = '';
+                a.push(txt);
+                localStorage.setItem('todo', JSON.stringify(a));
+                makediv(a);
+            }
+        }
+
+        function Button() {
+            if (document.getElementById('write').value != '') {
+                var todolist = document.getElementById("todo");
+                removeAllChildNodes(todolist);
+                var a = new Array();
+                console.log(localStorage.getItem('todo'));
+                if (localStorage.getItem('todo') != null) {
+                    var output = localStorage.getItem('todo');
+                    a = JSON.parse(output);
+                }
+                var txt = document.getElementById('write').value;
+                document.getElementById('write').value = '';
+                a.push(txt);
+                localStorage.setItem('todo', JSON.stringify(a));
+                makediv(a);
+            }
+        }
+
+        function deletediv(id) {
+            var todolist = document.getElementById("todo");
+            var a = new Array();
+            console.log(localStorage.getItem('todo'));
+            if (localStorage.getItem('todo') != null) {
+                var output = localStorage.getItem('todo');
+                a = JSON.parse(output);
+            }
+            a.splice(id, 1);
+            localStorage.setItem('todo', JSON.stringify(a));
+        }
+
+        function makediv(a) {
+            var todolist = document.getElementById("todo");
+            for (var i = 0; i < a.length; i++) {
+                var br = document.createElement("BR");
+                var h2 = document.createElement("DIV");
+                h2.innerHTML = a[i];
+                h2.style = "display:inline;";
+                //Add the DropDownList to DIV.
+                var div = document.createElement("DIV");
+                div.appendChild(h2);
+                div.style = "display:inline;";
+                //Create a Remove Button.
+                var btnRemove = document.createElement("INPUT");
+                btnRemove.value = "제거";
+                btnRemove.type = "button";
+                btnRemove.style = "background-color:transparent; float:right; border:0;outline:0; color:white; font-size:large";
+                btnRemove.id = i;
+                btnRemove.onclick = function(i) {
+                    deletediv(i);
+                    todolist.removeChild(this.parentNode);
+                    remake();
+                };
+                //Add the Remove Buttton to DIV.
+                div.appendChild(btnRemove);
+                //Add the DIV to the container DIV.
+                console.log(div);
+                todolist.appendChild(div);
+                todolist.appendChild(br);
+            }
+        }
+
+        function remake() {
+            var todolist = document.getElementById("todo");
+            removeAllChildNodes(todolist);
+            var a = new Array();
+            console.log(localStorage.getItem('todo'));
+            if (localStorage.getItem('todo') != null) {
+                var output = localStorage.getItem('todo');
+                a = JSON.parse(output);
+            }
+            makediv(a);
+        }
+
+        function writecheck() {
+            if (document.getElementById('write').value == '') {
+                document.getElementById('write').value = "Write a to do";
+            }
+        }
+
+        function writecheck2() {
+            if (document.getElementById('write').value == "Write a to do") {
+                document.getElementById('write').value = "";
+            }
+        }
+
+    </script>
+</head>
+
+<body id="backimage">
+    <header>
+        <img id="weathericon" style="display: inline">
+        <div id="weather" style="display: inline; font-size:xxx-large; color:white; font-weight:bold;"></div>
+        <br>
+        <h5 id="temparature" style="display: inline; font-size:xxx-large; color:white; font-weight:bold;"></h5>
+        <h5 id="place" style="display: inline; font-size:xxx-large; color:white; font-weight:bold;"></h5>
+    </header>
+
+    <main>
+        <h1 id="clock" style=" position: absolute; left: 50%; top: 40%;  transform: translate(-50%, -50%); text-align: center;color:white; font-size:600%"></h1>
+        <input style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; background: transparent; position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); text-align: center;color:white; font-size:200%" type="text" id="name" value="What is your name?" onFocus="this.value='';return true;" onBlur="namecheck()" onKeypress="Enter()" />
+        <br>
+        <input style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; background: transparent; position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); text-align: center;color:white; font-size:200%" type="text" id="write" value="Write a to do" onFocus="writecheck2()" onBlur="writecheck()" onKeypress="Enter2()" />
+        <input type="button" onclick="Button()" value="추가" style=" position: absolute; left: 63%; top: 65%; transform: translate(-50%, -50%); background-color:transparent; float:right; border:0;outline:0; color:white; font-size:large">
+        <div id="todo" style="position: absolute; left: 50%; top: 85%; transform: translate(-50%, -50%); text-align: left;color:white; font-size:200%;display: inline; overflow-x:hidden; overflow-y:auto; height:150px;"></div>
+    </main>
+</body>
+
+</html>
