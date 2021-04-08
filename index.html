@@ -234,9 +234,9 @@
 
     <main>
         <h1 id="clock" style=" position: absolute; left: 50%; top: 40%;  transform: translate(-50%, -50%); text-align: center;color:white; font-size:600%"></h1>
-        <input style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; background: transparent; position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); text-align: center;color:white; font-size:200%" type="text" id="name" value="What is your name?" onFocus="this.value='';return true;" onBlur="namecheck()" onKeypress="Enter()" />
+        <input style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; background: transparent; position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); text-align: center;color:white; font-size:200%" type="text" id="name" placeholder="What is your name?" onFocus="this.value='';return true;" onBlur="namecheck()" onKeypress="Enter()" />
         <br>
-        <input style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; background: transparent; position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); text-align: center;color:white; font-size:200%" type="text" id="write" value="Write a to do" onFocus="writecheck2()" onBlur="writecheck()" onKeypress="Enter2()" />
+        <input style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; background: transparent; position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); text-align: center;color:white; font-size:200%" type="text" id="write" placeholder="Write a to do" onFocus="writecheck2()" onBlur="writecheck()" onKeypress="Enter2()" />
         <input type="button" onclick="Button()" value="추가" style=" position: absolute; left: 63%; top: 65%; transform: translate(-50%, -50%); background-color:transparent; float:right; border:0;outline:0; color:white; font-size:large">
         <div id="todo" style="position: absolute; left: 50%; top: 85%; transform: translate(-50%, -50%); text-align: left;color:white; font-size:200%;display: inline; overflow-x:hidden; overflow-y:auto; height:150px;"></div>
     </main>
